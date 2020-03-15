@@ -40,8 +40,6 @@ def page_get():
         header += d.text.strip() + ","
         lines2.append(n.text.strip() + ',')
 
-    header += '\n'
-
 
     # checks if the file exists, and if not then makes it and sets the headers
     if not os.path.exists(storage + '/file.csv'):
