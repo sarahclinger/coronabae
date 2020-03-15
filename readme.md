@@ -11,6 +11,11 @@ Install some pre reqs, reconmend making a virtualenv.
 ```
 python3 -m venv env
 
+```
+
+Activate your environment.
+
+```
 pip3 install BeautifulSoup4
 pip3 install requests
 pip3 install pandas
