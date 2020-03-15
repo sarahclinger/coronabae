@@ -5,20 +5,22 @@ import os
 from bs4 import BeautifulSoup 
 import pandas as pd
 import plotly.express as px
+from pathlib import Path
 
 #Constants
 URL = 'https://odh.ohio.gov/wps/portal/gov/odh/know-our-programs/Novel-Coronavirus' 
-storage = os.getcwd()
+storage = Path(os.getcwd())
 today = datetime.today().strftime('%Y-%m-%d')
 
 def line_analysis():
-    with open('file.csv') as f:
-        output = True
-        for line in f:
+    output = True
+    if os.path.exists(Path(storage / 'file.csv')):
+        with open('file.csv') as f:
+            for line in f:
 
-            if line.split(',')[0] == today:
-                print('Already gathered data for today')
-                output = False
+                if line.split(',')[0] == today:
+                    print('Already gathered data for today')
+                    output = False
     return output
 
 def page_get():
@@ -40,25 +42,24 @@ def page_get():
         header += d.text.strip() + ","
         lines2.append(n.text.strip() + ',')
 
-
     # checks if the file exists, and if not then makes it and sets the headers
-    if not os.path.exists(storage + '/file.csv'):
-        with open(storage + 'file.csv', mode='a+') as csv_file:
+    if not os.path.exists(Path(storage / 'file.csv')):
+        with open(Path(storage / "file.csv"), mode='a+') as csv_file:
             csv_file.writelines(header)
+            csv_file.writelines('\n')
         
     # add the new data
-    with open(storage + '/file.csv', mode='a') as csv_file:
+    with open(Path(storage / "file.csv"), mode='a') as csv_file:
         for line in lines2:
             csv_file.writelines(line)
-
         csv_file.writelines('\n')
 
-path = storage + '/file.csv'
+path = Path(storage / 'file.csv')
 
-df_wide = pd.read_csv(path)
+
 
 def graph_stuff():
-
+    df_wide = pd.read_csv(path)
     value_variables = ['Confirmed Cases in Ohio*', 'Persons Under Investigation** in Ohio', 'Negative PUIs*** in Ohio']
     id_variable = ['Date']
 
@@ -70,7 +71,7 @@ def graph_stuff():
 
     #px.write_html(fig, file='hello_world.html', auto_open=True)
     #px.offline.plot(figure, "file.html")
-    with open('plotly_graph.html', 'w') as f:
+    with open(Path('plotly_graph.html'), 'w') as f:
         f.write(fig.to_html(include_plotlyjs='cdn'))
 
     fig.show()
