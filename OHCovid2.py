@@ -7,7 +7,7 @@ import pandas as pd
 import plotly.express as px
 from pathlib import Path
 
-#Constants and stuff
+#Constants
 URL = 'https://odh.ohio.gov/wps/portal/gov/odh/know-our-programs/Novel-Coronavirus' 
 storage = Path(os.getcwd())
 today = datetime.today().strftime('%Y-%m-%d')
@@ -50,6 +50,8 @@ def page_get():
         
     # add the new data
     with open(Path(storage / "file.csv"), mode='a') as csv_file:
+        #Crude Hack if the file didn't contain a new line before writing.
+        csv_file.writelines('\n')
         for line in lines2:
             csv_file.writelines(line)
         csv_file.writelines('\n')
