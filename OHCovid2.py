@@ -7,7 +7,7 @@ import pandas as pd
 import plotly.express as px
 from pathlib import Path
 
-#Constants
+#Constants and stuff
 URL = 'https://odh.ohio.gov/wps/portal/gov/odh/know-our-programs/Novel-Coronavirus' 
 storage = Path(os.getcwd())
 today = datetime.today().strftime('%Y-%m-%d')
