@@ -16,7 +16,7 @@ def line_analysis():
     if os.path.exists(Path(storage / 'file.csv')):
         df = pd.read_csv(Path(storage / 'file.csv')
         dates = df.Date 
-        return(today in str(dates))
+        return today not in str(dates)
     return True
 
 def page_get():
