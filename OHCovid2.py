@@ -32,13 +32,7 @@ header += '\n'
 # checks if the file exists, and if not then makes it and sets the headers
 if not os.path.exists(storage + 'file.csv'):
     with open(storage + 'file.csv', mode='a+') as csv_file:
-        csv_file.writelines(header)
-
-# rewrite the headers every time just in case
-with open(storage + 'file.csv', mode='r+') as csv_file:
-    csv_file.writelines(header)
-    csv_file.seek(0)
-    
+        csv_file.writelines(header)    
 
 # add the new data
 with open(storage + 'file.csv', mode='a') as csv_file:
