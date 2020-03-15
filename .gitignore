@@ -2,3 +2,4 @@ env/
 *.csv
 .DS_Store
 *.html
+.vscode/
