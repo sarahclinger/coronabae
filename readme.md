@@ -11,9 +11,9 @@ Install some pre reqs, reconmend making a virtualenv.
 ```
 python3 -m venv env
 
-pip install BeautifulSoup4
-pip install requests
-pip install pandas
-pip install plotly
+pip3 install BeautifulSoup4
+pip3 install requests
+pip3 install pandas
+pip3 install plotly
 
 ```

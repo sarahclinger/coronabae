@@ -6,65 +6,88 @@ from bs4 import BeautifulSoup
 import pandas as pd
 import plotly.express as px
 
+#Constants
 URL = 'https://odh.ohio.gov/wps/portal/gov/odh/know-our-programs/Novel-Coronavirus' 
-page = requests.get(URL)
-soup = BeautifulSoup(page.content, 'html.parser')
-storage = '/Users/brandon/Dev/coronabae/'
-
-# get the numbers and their descriptions
-results = soup.find_all(class_='odh-ads__item-title')
-descriptions = soup.find_all(class_='odh-ads__item-summary')
-
+storage = os.getcwd()
 today = datetime.today().strftime('%Y-%m-%d')
 
-# create the header and the data lines
-lines2today = today + ','
-lines2 = [lines2today]
-header = 'Date,'
+def line_analysis():
+    with open('file.csv') as f:
+        output = True
+        for line in f:
 
-for n, d in zip(results,descriptions):
-    header += d.text.strip() + ","
-    lines2.append(n.text.strip() + ',')
+            if line.split(',')[0] == today:
+                print('Already gathered data for today')
+                output = False
+    return output
 
-header += '\n'
+def page_get():
+    page = requests.get(URL)
+    soup = BeautifulSoup(page.content, 'html.parser')
 
 
-# checks if the file exists, and if not then makes it and sets the headers
-if not os.path.exists(storage + 'file.csv'):
-    with open(storage + 'file.csv', mode='a+') as csv_file:
+    # get the numbers and their descriptions
+    results = soup.find_all(class_='odh-ads__item-title')
+    descriptions = soup.find_all(class_='odh-ads__item-summary')
+
+
+    # create the header and the data lines
+    lines2today = today + ','
+    lines2 = [lines2today]
+    header = 'Date,'
+
+    for n, d in zip(results,descriptions):
+        header += d.text.strip() + ","
+        lines2.append(n.text.strip() + ',')
+
+    header += '\n'
+
+
+    # checks if the file exists, and if not then makes it and sets the headers
+    if not os.path.exists(storage + '/file.csv'):
+        with open(storage + 'file.csv', mode='a+') as csv_file:
+            csv_file.writelines(header)
+
+    # rewrite the headers every time just in case
+    with open(storage + '/file.csv', mode='r+') as csv_file:
         csv_file.writelines(header)
+        csv_file.seek(0)
+        
 
-# rewrite the headers every time just in case
-with open(storage + 'file.csv', mode='r+') as csv_file:
-    csv_file.writelines(header)
-    csv_file.seek(0)
-    
+    # add the new data
+    with open(storage + '/file.csv', mode='a') as csv_file:
+        for line in lines2:
+            csv_file.writelines(line)
 
-# add the new data
-with open(storage + 'file.csv', mode='a') as csv_file:
-    for line in lines2:
-        csv_file.writelines(line)
+        csv_file.writelines('\n')
 
-    csv_file.writelines('\n')
-
-path = storage + 'file.csv'
+path = storage + '/file.csv'
 
 df_wide = pd.read_csv(path)
 
-value_variables = ['Confirmed Cases in Ohio', 'Persons Under Investigation* in Ohio', 'Negative PUIs** in Ohio']
-id_variable = ['Date']
+def graph_stuff():
 
-#making the data "tidy"
-df_long=pd.melt(df_wide, id_vars=id_variable, value_vars=value_variables)
+    value_variables = ['Confirmed Cases in Ohio*', 'Persons Under Investigation** in Ohio', 'Negative PUIs*** in Ohio']
+    id_variable = ['Date']
 
-#graph the data
-fig = px.line(df_long, x='Date', y='value', title='Coronavirus Cases in Ohio', color='variable')
+    #making the data "tidy"
+    df_long=pd.melt(df_wide, id_vars=id_variable, value_vars=value_variables)
 
-#px.write_html(fig, file='hello_world.html', auto_open=True)
-#px.offline.plot(figure, "file.html")
-with open('plotly_graph.html', 'w') as f:
-    f.write(fig.to_html(include_plotlyjs='cdn'))
+    #graph the data
+    fig = px.line(df_long, x='Date', y='value', title='Coronavirus Cases in Ohio', color='variable')
 
-fig.show()
+    #px.write_html(fig, file='hello_world.html', auto_open=True)
+    #px.offline.plot(figure, "file.html")
+    with open('plotly_graph.html', 'w') as f:
+        f.write(fig.to_html(include_plotlyjs='cdn'))
+
+    fig.show()
+
+#Runtime
+if line_analysis():
+    page_get()
+
+
+graph_stuff()
 
 
