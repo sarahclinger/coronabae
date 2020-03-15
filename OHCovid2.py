@@ -10,18 +10,14 @@ from pathlib import Path
 #Constants
 URL = 'https://odh.ohio.gov/wps/portal/gov/odh/know-our-programs/Novel-Coronavirus' 
 storage = Path(os.getcwd())
-today = datetime.today().strftime('%Y-%m-%d')
+today = datetime.today().strftime('%#m/%#d/%Y')
 
 def line_analysis():
-    output = True
     if os.path.exists(Path(storage / 'file.csv')):
-        with open('file.csv') as f:
-            for line in f:
-
-                if line.split(',')[0] == today:
-                    print('Already gathered data for today')
-                    output = False
-    return output
+        df = pd.read_csv(Path(storage / 'file.csv')
+        dates = df.Date 
+        return(today in str(dates))
+    return True
 
 def page_get():
     page = requests.get(URL)
