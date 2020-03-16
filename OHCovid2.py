@@ -66,7 +66,8 @@ def graph_stuff():
 
     #graph the data
     fig = px.line(df_long, x='Date', y='People', title='Coronavirus Cases in Ohio', color='Legend')
-
+    
+    #button formatting
     fig.update_layout(
         updatemenus=[
             dict(
@@ -76,7 +77,7 @@ def graph_stuff():
                     dict(
                         args=[value_variables[0]],
                         label=str([value_variables[0]]),
-                        method="restyle"
+                        method="update"
                     ),
                     dict(
                         args=[value_variables[1]],
