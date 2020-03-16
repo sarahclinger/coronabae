@@ -14,7 +14,7 @@ today = datetime.today().strftime('%#m/%#d/%Y')
 
 def line_analysis():
     if os.path.exists(Path(storage / 'file.csv')):
-        df = pd.read_csv(Path(storage / 'file.csv')
+        df = pd.read_csv(Path(storage / 'file.csv'))
         dates = df.Date 
         return today not in str(dates)
     return True
@@ -62,10 +62,44 @@ def graph_stuff():
     id_variable = ['Date']
 
     #making the data "tidy"
-    df_long=pd.melt(df_wide, id_vars=id_variable, value_vars=value_variables)
+    df_long=pd.melt(df_wide, id_vars=id_variable, value_vars=value_variables, value_name='People', var_name='Legend')
 
     #graph the data
-    fig = px.line(df_long, x='Date', y='value', title='Coronavirus Cases in Ohio', color='variable')
+    fig = px.line(df_long, x='Date', y='People', title='Coronavirus Cases in Ohio', color='Legend')
+
+    fig.update_layout(
+        updatemenus=[
+            dict(
+                type = "buttons",
+                direction = "left",
+                buttons=list([
+                    dict(
+                        args=[value_variables[0]],
+                        label=str([value_variables[0]]),
+                        method="restyle"
+                    ),
+                    dict(
+                        args=[value_variables[1]],
+                        label=str([value_variables[1]]),
+                        method="restyle"
+
+                    ),
+                    dict(
+                        args=[value_variables[2]],
+                        label=str([value_variables[2]]),
+                        method="restyle"
+                        
+                    )
+                    ]),
+            pad={"r": 10, "t": 10},
+            showactive=True,
+            x=0.11,
+            xanchor="left",
+            y=1.1,
+            yanchor="top"
+            ),
+        ]
+    )
 
     #px.write_html(fig, file='hello_world.html', auto_open=True)
     #px.offline.plot(figure, "file.html")
