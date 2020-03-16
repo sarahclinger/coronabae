@@ -10,7 +10,7 @@ from pathlib import Path
 #Constants
 URL = 'https://coronavirus.ohio.gov/wps/portal/gov/covid-19/' 
 storage = Path(os.getcwd())
-today = datetime.today().strftime('%#Y-%#m-%d')
+today = datetime.today().strftime('%Y-%m-%d')
 
 def line_analysis():
     if os.path.exists(Path(storage / 'ndata.csv')):
