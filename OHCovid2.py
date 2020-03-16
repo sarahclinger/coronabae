@@ -8,13 +8,13 @@ import plotly.express as px
 from pathlib import Path
 
 #Constants
-URL = 'https://odh.ohio.gov/wps/portal/gov/odh/know-our-programs/Novel-Coronavirus' 
+URL = 'https://coronavirus.ohio.gov/wps/portal/gov/covid-19/' 
 storage = Path(os.getcwd())
-today = datetime.today().strftime('%#m/%#d/%Y')
+today = datetime.today().strftime('%#Y-%#m-%d')
 
 def line_analysis():
-    if os.path.exists(Path(storage / 'file.csv')):
-        df = pd.read_csv(Path(storage / 'file.csv'))
+    if os.path.exists(Path(storage / 'ndata.csv')):
+        df = pd.read_csv(Path(storage / 'ndata.csv'))
         dates = df.Date
         return today not in str(dates)
     return True
@@ -28,7 +28,6 @@ def page_get():
     results = soup.find_all(class_='odh-ads__item-title')
     descriptions = soup.find_all(class_='odh-ads__item-summary')
 
-
     # create the header and the data lines
     lines2today = today + ','
     lines2 = [lines2today]
@@ -39,26 +38,26 @@ def page_get():
         lines2.append(n.text.strip() + ',')
 
     # checks if the file exists, and if not then makes it and sets the headers
-    if not os.path.exists(Path(storage / 'file.csv')):
-        with open(Path(storage / "file.csv"), mode='a+') as csv_file:
+    if not os.path.exists(Path(storage / 'ndata.csv')):
+        with open(Path(storage / "ndata.csv"), mode='a+') as csv_file:
             csv_file.writelines(header)
             csv_file.writelines('\n')
         
     # add the new data
-    with open(Path(storage / "file.csv"), mode='a') as csv_file:
+    with open(Path(storage / "ndata.csv"), mode='a') as csv_file:
         #Crude Hack if the file didn't contain a new line before writing.
         csv_file.writelines('\n')
         for line in lines2:
             csv_file.writelines(line)
         csv_file.writelines('\n')
 
-path = Path(storage / 'file.csv')
+path = Path(storage / 'ndata.csv')
 
 
 
 def graph_stuff():
     df_wide = pd.read_csv(path)
-    value_variables = ['Confirmed Cases in Ohio*', 'Persons Under Investigation** in Ohio', 'Negative PUIs*** in Ohio']
+    value_variables = ['Confirmed Cases in Ohio', 'Number of Counties in Ohio*', 'Number of Hospitalizations in Ohio']
     id_variable = ['Date']
 
     #making the data "tidy"
