@@ -61,15 +61,49 @@ def graph_stuff():
     id_variable = ['Date']
 
     #making the data "tidy"
-    df_long=pd.melt(df_wide, id_vars=id_variable, value_vars=value_variables)
+    df_long=pd.melt(df_wide, id_vars=id_variable, value_vars=value_variables, value_name='People', var_name='Legend')
 
     #graph the data
     fig = px.line(df_long, x='Date', y='value', title='Coronavirus Cases in Ohio', color='variable')
+
+    fig.update_layout(
+        updatemenus=[
+            dict(
+                type="buttons",
+                direction="left",
+                buttons=list([
+                    dict(
+                        args=[{"visible": [False, True, True]}],
+                        label=str([value_variables[0]]),
+                        method="relayout"
+                    ),
+                    dict(
+                        args=[{"visible": [True, False, True]}],
+                        label=str([value_variables[1]]),
+                        method="relayout"
+                    ),
+                    dict(
+                        args=[{"visible": [True, True, False]}],
+                        label=str([value_variables[2]]),
+                        method="relayout"
+                    )
+                ]),
+            pad={'r':10, 't':10},
+            showactive = True,
+            x=0.11,
+            xanchor="left",
+            y=1.1,
+            yanchor="top"
+            ),
+        ]
+    )
 
     #px.write_html(fig, file='hello_world.html', auto_open=True)
     #px.offline.plot(figure, "file.html")
     with open(Path('plotly_graph.html'), 'w') as f:
         f.write(fig.to_html(include_plotlyjs='cdn'))
+
+
 
     fig.show()
 
