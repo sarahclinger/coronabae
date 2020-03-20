@@ -64,7 +64,7 @@ def graph_stuff():
     df_long=pd.melt(df_wide, id_vars=id_variable, value_vars=value_variables, value_name='People', var_name='Legend')
 
     #graph the data
-    fig = px.line(df_long, x='Date', y='value', title='Coronavirus Cases in Ohio', color='variable')
+    fig = px.line(df_long, x='Date', y='People', title='Coronavirus Cases in Ohio', color='Legend')
 
     fig.update_layout(
         updatemenus=[
