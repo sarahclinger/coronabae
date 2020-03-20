@@ -61,7 +61,7 @@ def build_today_data(countyinfo):
         id+=1
 
     if not os.path.exists(info_path):
-        with open(path, 'w+') as csv_file:
+        with open(info_path, 'w+') as csv_file:
             csv_file.writelines(header)
             csv_file.writelines(lines)
 
