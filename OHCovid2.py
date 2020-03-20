@@ -6,6 +6,7 @@ from bs4 import BeautifulSoup
 import pandas as pd
 import plotly.express as px
 from pathlib import Path
+import re 
 
 #Constants
 URL = 'https://coronavirus.ohio.gov/wps/portal/gov/covid-19/' 
@@ -50,6 +51,29 @@ def page_get():
         for line in lines2:
             csv_file.writelines(line)
         csv_file.writelines('\n')
+
+def get_county_info():
+    page = requests.get(URL)
+    soup = BeautifulSoup(page.content, 'html.parser')
+
+    results = soup.find_all(class_='odh-ads__item-title')
+    
+    county_num = results[1].text.strip()
+    text = soup.find_all(class_='odh-ads__super-script-item')[0].text.strip()
+    counties = text[text.index(':') + 1:]
+    counties_list = counties.split(',')
+
+    count_info = {}
+    for c in counties_list:
+        county_info[c[:c.strip().index(' ')+1]]=re.findall(r'\d+', c)[0]
+    
+    if len(count_info) == int(county_num):
+        return count_info
+    else:
+        return "Error: number of counties and county count don't match"
+
+
+
 
 path = Path(storage / 'ndata.csv')
 
