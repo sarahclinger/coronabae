@@ -109,7 +109,6 @@ def build_and_display_map():
     fig.show()
 
 
-county_numbers = get_county_nums()
-build_today_data(county_numbers)
+build_today_data(get_county_nums())
 build_ohio_geojson()
 build_and_display_map()
