@@ -43,6 +43,11 @@ def page_get():
         with open(Path(storage / "ndata.csv"), mode='a+') as csv_file:
             csv_file.writelines(header)
             csv_file.writelines('\n')
+
+    # rewrite the headers as they may have changed
+    with open(Path(storage / "ndata.csv"), mode='r+') as csv_file:
+        csv_file.seek(0)
+        csv_file.writelines(header)
         
     # add the new data
     with open(Path(storage / "ndata.csv"), mode='a') as csv_file:
@@ -73,15 +78,25 @@ def get_county_info():
         return "Error: number of counties and county count don't match"
 
 
+def header_titles():
+    page = requests.get(URL)
+    soup = BeautifulSoup(page.content, 'html.parser')
+
+    headers = soup.find_all(class_='odh-ads__item-summary')
+
+    titles = []
+    for h in headers:
+        titles.append(h.text.strip())
+    return titles
 
 
 path = Path(storage / 'ndata.csv')
 
 
 
-def graph_stuff():
+def graph_stuff(titles):
     df_wide = pd.read_csv(path)
-    value_variables = ['Confirmed Cases in Ohio', 'Number of Counties in Ohio*', 'Number of Hospitalizations in Ohio', 'Number of Deaths**']
+    value_variables = titles 
     id_variable = ['Date']
 
     #making the data "tidy"
@@ -141,6 +156,6 @@ if line_analysis():
     page_get()
 
 
-graph_stuff()
+graph_stuff(header_titles())
 
 
