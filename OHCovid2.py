@@ -81,14 +81,14 @@ path = Path(storage / 'ndata.csv')
 
 def graph_stuff():
     df_wide = pd.read_csv(path)
-    value_variables = ['Confirmed Cases in Ohio', 'Number of Counties in Ohio*', 'Number of Hospitalizations in Ohio']
+    value_variables = ['Confirmed Cases in Ohio', 'Number of Counties in Ohio*', 'Number of Hospitalizations in Ohio', 'Number of Deaths**']
     id_variable = ['Date']
 
     #making the data "tidy"
     df_long=pd.melt(df_wide, id_vars=id_variable, value_vars=value_variables, value_name='People', var_name='Legend')
 
     #graph the data
-    fig = px.line(df_long, x='Date', y='value', title='Coronavirus Cases in Ohio', color='variable')
+    fig = px.line(df_long, x='Date', y='People', title='Coronavirus Cases in Ohio', color='Legend')
 
     fig.update_layout(
         updatemenus=[
@@ -97,18 +97,23 @@ def graph_stuff():
                 direction="left",
                 buttons=list([
                     dict(
-                        args=[{"visible": [False, True, True]}],
+                        args=[{"visible": [False, True, True, True]}],
                         label=str([value_variables[0]]),
                         method="relayout"
                     ),
                     dict(
-                        args=[{"visible": [True, False, True]}],
+                        args=[{"visible": [True, False, True, True]}],
                         label=str([value_variables[1]]),
                         method="relayout"
                     ),
                     dict(
-                        args=[{"visible": [True, True, False]}],
+                        args=[{"visible": [True, True, False, True]}],
                         label=str([value_variables[2]]),
+                        method="relayout"
+                    ),
+                    dict(
+                        args=[{"visible": [True, True, True, False]}],
+                        label=str([value_variables[3]]),
                         method="relayout"
                     )
                 ]),
