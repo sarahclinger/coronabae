@@ -7,6 +7,7 @@ import pandas as pd
 import plotly.express as px
 from pathlib import Path
 import re 
+import codecs
 
 #Constants
 URL = 'https://coronavirus.ohio.gov/wps/portal/gov/covid-19/' 
@@ -40,17 +41,17 @@ def page_get():
 
     # checks if the file exists, and if not then makes it and sets the headers
     if not os.path.exists(Path(storage / 'ndata.csv')):
-        with open(Path(storage / "ndata.csv"), mode='a+') as csv_file:
+        with codecs.open(Path(storage / "ndata.csv"), mode='a+', encoding="utf-8") as csv_file:
             csv_file.writelines(header)
             csv_file.writelines('\n')
 
     # rewrite the headers as they may have changed
-    with open(Path(storage / "ndata.csv"), mode='r+') as csv_file:
+    with codecs.copen(Path(storage / "ndata.csv"), mode='r+', encoding="utf-8") as csv_file:
         csv_file.seek(0)
         csv_file.writelines(header)
         
     # add the new data
-    with open(Path(storage / "ndata.csv"), mode='a') as csv_file:
+    with codecs.open(Path(storage / "ndata.csv"), mode='a', encoding="utf-8") as csv_file:
         #Crude Hack if the file didn't contain a new line before writing.
         csv_file.writelines('\n')
         for line in lines2:
