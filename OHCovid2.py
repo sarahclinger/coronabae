@@ -36,8 +36,9 @@ def page_get():
     header = 'Date,'
 
     for n, d in zip(results,descriptions):
-        header += d.text.strip() + ","
-        lines2.append(n.text.strip() + ',')
+        if 'Info' not in d.text.strip() and "Dashboard" not in d.text.strip():
+            header += d.text.strip() + ","
+            lines2.append(n.text.strip() + ',')
 
     # checks if the file exists, and if not then makes it and sets the headers
     if not os.path.exists(Path(storage / 'ndata.csv')):
@@ -87,7 +88,8 @@ def header_titles():
 
     titles = []
     for h in headers:
-        titles.append(h.text.strip())
+        if 'Info' not in h.text.strip() and "Dashboard" not in h.text.strip():
+            titles.append(h.text.strip())
     return titles
 
 
