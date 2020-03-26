@@ -46,7 +46,7 @@ def page_get():
             csv_file.writelines('\n')
 
     # rewrite the headers as they may have changed
-    with codecs.copen(Path(storage / "ndata.csv"), mode='r+', encoding="utf-8") as csv_file:
+    with codecs.open(Path(storage / "ndata.csv"), mode='r+', encoding="utf-8") as csv_file:
         csv_file.seek(0)
         csv_file.writelines(header)
         
